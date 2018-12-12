@@ -7,7 +7,9 @@ async function installServiceWorker() {
     return Promise.reject();
   }
 
-  await serviceWorker.register('./service-worker.js');
+  await serviceWorker.register('./service-worker.js', {
+    scope: '/payment-app-demo/'
+  });
   console.info('[info] Registered Service Worker');
 
   return serviceWorker.ready;
