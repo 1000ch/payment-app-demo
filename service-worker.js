@@ -1,10 +1,12 @@
 importScripts('./promise-resolver.js');
 
 self.addEventListener('install', e => {
+  console.info('[info] Handling `install` event');
   e.waitUntil(self.skipWaiting());
 });
 
 self.addEventListener('activate', e => {
+  console.info('[info] Handling `activate` event');
   e.waitUntil(self.clients.claim());
 });
 
@@ -15,11 +17,15 @@ let resolver;
 let paymentRequestEvent;
 
 self.addEventListener('paymentrequest', async e => {
+  console.info('[info] Handling `paymentrequest` event');
   paymentRequestEvent = e;
 
   try {
+    console.info('[info] Opening checkout page');
     const promise = e.openWindow(checkoutURL);
     resolver = new PromiseResolver(promise);
+
+    console.info('[info] Responding with e.openWindow() promise', resolver.promise);
     e.respondWith(resolver.promise);
   } catch (error) {
     resolver.reject(error);
@@ -27,6 +33,7 @@ self.addEventListener('paymentrequest', async e => {
 });
 
 self.addEventListener('message', async e => {
+  console.info('[info] Handling `message` event');
   if (paymentRequestEvent === undefined) {
     return;
   }
