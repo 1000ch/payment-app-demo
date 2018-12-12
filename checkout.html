@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Payment App demo</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Payment App demo</h1>
+      <p>Please click below to install Payment App.</p>
+      <form>
+        <div class="form-group">
+          <button class="btn btn-primary" type="button">Install Payment App</button>
+        </div>
+      </form>
+    </div>
+    <script type="module">
+      import {
+        installServiceWorker,
+        addPaymentInstrument
+      } from './app.js';
+
+      (async () => {
+        const registration = await installServiceWorker();
+
+        addPaymentInstrument(registration);
+      })();
+    </script>
+  </body>
+</html>

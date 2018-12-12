@@ -1,0 +1,12 @@
+{
+  "name": "Payment App demo",
+  "short_name": "PAd",
+  "description": "This is an example of the Payment Handler API.",
+  "serviceworker": {
+    "src": "service-worker.js",
+    "scope": "/payment-app-demo",
+    "use_cache": false
+  },
+  "start_url": "/payment-app-demo",
+  "display": "standalone"
+}

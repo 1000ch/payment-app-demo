@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Payment App demo</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="payment-method-manifest" href="payment.json">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Payment App demo</h1>
+      <p>Please click below to install Payment App.</p>
+      <form>
+        <div class="form-group">
+          <button
+            id="install-payment-app"
+            class="btn btn-primary"
+            type="button">
+            Install Payment App
+          </button>
+        </div>
+        <div class="form-group">
+          <button
+            id="uninstall-payment-app"
+            class="btn btn-danger"
+            type="button">
+            Uninstall Payment App
+          </button>
+        </div>
+      </form>
+    </div>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
