@@ -17,44 +17,43 @@ let paymentRequestEvent;
 self.addEventListener('paymentrequest', async e => {
   paymentRequestEvent = e;
 
-  resolver = new PromiseResolver();
-  e.respondWith(resolver.promise);
-
   try {
-    const client = await e.openWindow(checkoutURL);
-
-    if (client === null) {
-      resolver.reject('Failed to open window');
-    }
+    const promise = e.openWindow(checkoutURL);
+    resolver = new PromiseResolver(promise);
+    e.respondWith(resolver.promise);
   } catch (error) {
     resolver.reject(error);
   }
 });
 
-self.addEventListener('message', e => {
-  if (e.data === "payment_app_window_ready") {
-    sendPaymentRequest();
-    return;
-  }
-
-  if (e.data.methodName === methodName) {
-    resolver.resolve(e.data);
-  } else {
-    resolver.reject(e.data);
-  }
-});
-
-async function sendPaymentRequest() {
+self.addEventListener('message', async e => {
   if (paymentRequestEvent === undefined) {
     return;
   }
 
-  const clientList = await clients.matchAll({
-    includeUncontrolled: false,
-    type: 'window'
-  });
+  switch (e.data.type) {
+    case 'payment-window-ready':
+      const clientList = await clients.matchAll({
+        includeUncontrolled: false,
+        type: 'window'
+      });
 
-  for (const client of clientList) {
-    client.postMessage(paymentRequestEvent.total);
+      for (const client of clientList) {
+        client.postMessage(paymentRequestEvent.total);
+      }
+      break;
+    case 'pay-with-payment-app':
+      const { total } = e.data;
+
+      resolver.resolve({
+        methodName,
+        details: {
+          total
+        }
+      });
+      break;
+    default:
+      resolver.reject(e.data);
+      break;
   }
-}
+});

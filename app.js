@@ -1,4 +1,4 @@
-async function installServiceWorker() {
+export async function installServiceWorker() {
   console.info('[info] Installing Service Worker');
   const { serviceWorker } = navigator;
 
@@ -15,7 +15,7 @@ async function installServiceWorker() {
   return serviceWorker.ready;
 }
 
-async function uninstallServiceWorker() {
+export async function uninstallServiceWorker() {
   console.info('[info] Uninstalling Service Worker');
   const { serviceWorker } = navigator;
 
@@ -37,7 +37,7 @@ async function uninstallServiceWorker() {
   console.info('[info] Cleared caches');
 }
 
-function addPaymentInstrument({ paymentManager }) {
+export function addPaymentInstrument({ paymentManager }) {
   if (paymentManager === undefined) {
     console.info('[info] paymentManager is not supported');
     return Promise.reject();
@@ -51,16 +51,21 @@ function addPaymentInstrument({ paymentManager }) {
   console.info('[info] Added a payment instrument');
 }
 
-async function main() {
-  document.querySelector('#install-payment-app').addEventListener('click', async e => {
-    const registration = await installServiceWorker();
+export function notifyPaymentWindowReady() {
+  console.info('[info] Notifing payment app is ready to Service Worker');
+  const { serviceWorker } = navigator;
 
-    addPaymentInstrument(registration);
-  });
-
-  document.querySelector('#uninstall-payment-app').addEventListener('click', async e => {
-    await uninstallServiceWorker();
+  serviceWorker.controller.postMessage({
+    type: 'payment-window-ready'
   });
 }
 
-main();
+export function payWithPaymentApp(total) {
+  console.info('[info] Paying with payment app');
+  const { serviceWorker } = navigator;
+
+  serviceWorker.controller.postMessage({
+    type: 'pay-with-payment-app',
+    total
+  });
+}

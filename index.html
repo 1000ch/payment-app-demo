@@ -31,6 +31,22 @@
         </div>
       </form>
     </div>
-    <script type="module" src="app.js"></script>
+    <script type="module">
+      import {
+        installServiceWorker,
+        uninstallServiceWorker,
+        addPaymentInstrument
+      } from './app.js';
+
+      document.querySelector('#install-payment-app').addEventListener('click', async e => {
+        const registration = await installServiceWorker();
+
+        addPaymentInstrument(registration);
+      });
+
+      document.querySelector('#uninstall-payment-app').addEventListener('click', async e => {
+        await uninstallServiceWorker();
+      });
+    </script>
   </body>
 </html>

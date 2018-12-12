@@ -9,24 +9,34 @@
   <body>
     <div class="container">
       <h1>Payment App demo</h1>
-      <p>Please click below to install Payment App.</p>
       <form>
         <div class="form-group">
-          <button class="btn btn-primary" type="button">Install Payment App</button>
+          <label for="total">Total</label>
+          <input class="form-control" id="total" type="text" placeholder="" readonly>
         </div>
+        <button id="pay-with-payment-app" class="btn btn-primary" type="button">Pay with Payment App</button>
       </form>
     </div>
     <script type="module">
       import {
-        installServiceWorker,
-        addPaymentInstrument
+        notifyPaymentWindowReady,
+        payWithPaymentApp
       } from './app.js';
 
-      (async () => {
-        const registration = await installServiceWorker();
+      let serviceWorker;
+      navigator.serviceWorker.addEventListener('message', e => {
+        serviceWorker = e.source;
+      });
 
-        addPaymentInstrument(registration);
-      })();
+      document.querySelector('#pay-with-payment-app').addEventListener('click', async e => {
+        if (serviceWorker) {
+          return;
+        }
+
+        payWithPaymentApp(document.querySelector('#total').value);
+      });
+
+      notifyPaymentWindowReady();
     </script>
   </body>
 </html>
