@@ -37,7 +37,7 @@ self.addEventListener('paymentrequest', async e => {
 });
 
 self.addEventListener('message', async e => {
-  console.info('[info] Handling `message` event');
+  console.info('[info] Handling `message` event:', e.data.type);
   if (paymentRequestEvent === undefined) {
     return;
   }
@@ -49,18 +49,20 @@ self.addEventListener('message', async e => {
         type: 'window'
       });
 
+      console.info('[info] Showing Service Worker clients list', clientList);
+
       for (const client of clientList) {
         client.postMessage(paymentRequestEvent.total);
       }
       break;
     case 'pay-with-payment-app':
-      const { total } = e.data;
+      const details = {
+        total: e.data
+      };
 
       resolver.resolve({
         methodName,
-        details: {
-          total
-        }
+        details
       });
       break;
     default:
