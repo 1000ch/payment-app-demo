@@ -20,13 +20,17 @@ self.addEventListener('paymentrequest', async e => {
   console.info('[info] Handling `paymentrequest` event');
   paymentRequestEvent = e;
 
+  function noop() {}
+  resolver = new PromiseResolver(new Promise(noop, noop));
+  e.respondWith(resolver.promise);
+
   try {
     console.info('[info] Opening checkout page');
-    const promise = e.openWindow(checkoutURL);
-    resolver = new PromiseResolver(promise);
+    const client = await e.openWindow(checkoutURL);
 
-    console.info('[info] Responding with e.openWindow() promise', resolver.promise);
-    e.respondWith(resolver.promise);
+    if (client === null) {
+      resolver.reject('Failed to open window');
+    }
   } catch (error) {
     resolver.reject(error);
   }
